@@ -1,4 +1,4 @@
-# REAL-TIME NEWS MONITORING SITE 
+# 실시간 뉴스 모니터링 사이트
 2022 소프트웨어 페스티벌 데이터 분석 부문 실시간 뉴스 모니터링 사이트입니다.
 
 > 개발 언어: HTML, CSS, JS, PHP, Python <br>
