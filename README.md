@@ -14,4 +14,4 @@
  
 <br><br>
 ## DEMO 영상
-<img src="https://user-images.githubusercontent.com/31283542/201528616-f39ab189-6a2a-4f43-895b-799f0a1092a1.gif" width="1080" height="900"/>
+<img src="https://user-images.githubusercontent.com/31283542/201531091-325cd852-a1ea-4488-ba7e-e1ed36dd6de3.gif" width="1080" height="900"/>
