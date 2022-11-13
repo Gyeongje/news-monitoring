@@ -12,7 +12,14 @@
 웹사이트를 통해 조회수에 따른 <span style="color: #2D3748; background-color:#fff5b1;">주요 뉴스</span>, 시간에 따른 <span style="color: #2D3748; background-color:#fff5b1;">최근 뉴스</span>를 보여줍니다.
 + 또한 각 기사 제목을 TextRank Library를 활용하여 키워드 및 언급도를 분석하고 키워드 언급 순위를 추출하여 <span style="color: #2D3748; background-color:#fff5b1;">실시간 검색어 순위</span>를 구현하였습니다. <br>
 
+<span style="color:red">
 
+빨강 글씨
+
+Red Font
+
+</span>
+ 
 <br><br>
 ## DEMO 영상
 <img src="https://user-images.githubusercontent.com/31283542/201528616-f39ab189-6a2a-4f43-895b-799f0a1092a1.gif" width="1080" height="900"/>
