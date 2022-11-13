@@ -1,4 +1,5 @@
 # 실시간 뉴스 모니터링 사이트
+![demo](https://user-images.githubusercontent.com/31283542/201528616-f39ab189-6a2a-4f43-895b-799f0a1092a1.gif)
 2022 소프트웨어 페스티벌 데이터 분석 부문 실시간 뉴스 모니터링 사이트입니다.
 
 > 개발 언어: HTML, CSS, JS, PHP, Python <br>
