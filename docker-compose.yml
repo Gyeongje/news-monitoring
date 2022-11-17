@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+    site:
+        build: ./crawl_site/
+        image: gyeongje/site
+        container_name: site        
+        ports: 
+            - "80:80"
+        depends_on:
+            - crawl_main
+            - crawl_new
+            #- crawl_keyword
+        restart: always
+        networks:
+          - gyeongje
+
+    crawl_main:
+        build: ./crawl_main/
+        image: gyeongje/crawl_main 
+        container_name: crawl_main
+        stdin_open: true
+        tty: true
+        depends_on:
+            - crawl_main_db
+        restart: always
+        networks:
+          - gyeongje
+
+    crawl_new:
+        build: ./crawl_new/
+        image: gyeongje/crawl_new 
+        container_name: crawl_new
+        stdin_open: true
+        tty: true
+        depends_on:
+            - crawl_new_db
+        restart: always
+        networks:
+            - gyeongje
+
+    crawl_keyword:
+        build: ./crawl_keyword/
+        image: gyeongje/crawl_keyword 
+        container_name: crawl_keyword
+        stdin_open: true
+        tty: true
+        depends_on:
+            - crawl_keyword_db
+        restart: always
+        networks:
+            - gyeongje
+
+    crawl_main_db:
+        image: mysql
+        container_name: crawl_main_db
+        environment:
+            - MYSQL_ROOT_PASSWORD=test1234
+            - TZ=Asia/Seoul
+        command: 
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+        networks:
+            - gyeongje
+
+    crawl_new_db:
+        image: mysql
+        container_name: crawl_new_db
+        environment:
+            - MYSQL_ROOT_PASSWORD=test1234
+            - TZ=Asia/Seoul
+        command: 
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+        networks:
+            - gyeongje
+
+    crawl_keyword_db:
+        image: mysql
+        container_name: crawl_keyword_db
+        environment:
+            - MYSQL_ROOT_PASSWORD=test1234
+            - TZ=Asia/Seoul
+        command: 
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+        networks:
+            - gyeongje
+      
+networks:
+  gyeongje:

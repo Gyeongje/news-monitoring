@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    
+<title>실시간 주요 뉴스</title>
+<link rel="stylesheet" type="text/css" href="./css/common.css">
+<link rel="stylesheet" type="text/css" href="./css/news.css">
+<meta http-equiv="refresh" content="10">
+</head>
+
+<?php
+function db_get_pdo()
+{
+    $host = $_SERVER['REMOTE_ADDR'];
+    $host[-1] = '3';
+    $port = '3306';
+    $dbname = 'crawl_new';
+    $charset = 'utf8';
+    $username = 'root';
+    $db_pw = "test1234";
+    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=$charset";
+    $pdo = new PDO($dsn, $username, $db_pw);
+    return $pdo;
+}
+
+function db_select($query, $param=array()){
+    $pdo = db_get_pdo();
+    try {
+        $st = $pdo->prepare($query);
+        $st->execute($param);
+        $result =$st->fetchAll(PDO::FETCH_ASSOC);
+        $pdo = null;
+        return $result;
+    } catch (PDOException $ex) {
+        return false;
+    } finally {
+        $pdo = null;
+    }
+}
+
+$JTBC = db_select("select * from JTBC");
+$KBS = db_select("select * from KBS");
+$MBC = db_select("select * from MBC");
+$NEWS1 = db_select("select * from NEWS1");
+$NEWSIS = db_select("select * from NEWSIS");
+$SBS = db_select("select * from SBS");
+$YTN = db_select("select * from YTN");
+$연합뉴스 = db_select("select * from 연합뉴스");
+$경향신문 = db_select("select * from 경향신문");
+$국민일보 = db_select("select * from 국민일보");
+$조선일보 = db_select("select * from 조선일보");
+$한겨레 = db_select("select * from 한겨레");
+
+$NEWS = array(
+    array(
+        "name" => "KBS",
+        "url" => "http://news.kbs.co.kr",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/oEG0000056/logo/2021/10/28/A_101423243.png",
+        "db" => $KBS
+    ),
+    array(
+        "name" => "JTBC",
+        "url" => "https://news.jtbc.co.kr",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/5DG0000437/logo/2021/12/14/A_175624905.jpg",
+        "db" => $JTBC
+    ),
+    array(
+        "name" => "MBC",
+        "url" => "http://imnews.imbc.com",
+        "image" => "https://mimgnews.pstatic.net/image/upload/office_logo/214/2020/09/15/logo_214_41_20200915191505.png",
+        "db" => $MBC
+    ),
+    array(
+        "name" => "SBS",
+        "url" => "http://news.sbs.co.kr",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/8gG0000055/logo/2020/12/10/A_090354116.jpg",
+        "db" => $SBS
+    ),
+    array(
+        "name" => "YTN",
+        "url" => "https://www.ytn.co.kr/",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/lQG0000052/logo/2021/10/01/A_134907667.png",
+        "db" => $YTN
+    ),
+    array(
+        "name" => "NEWS1",
+        "url" => "https://www.news1.kr",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/wMG0000421/logo/2021/02/05/A_095908359.jpg",
+        "db" => $NEWS1
+    ),
+    array(
+        "name" => "NEWSIS",
+        "url" => "https://www.newsis.com",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/XrG0000003/logo/2022/02/07/A_135923356.jpg",
+        "db" => $NEWSIS
+    ),
+    array(
+        "name" => "연합뉴스",
+        "url" => "https://www.yna.co.kr",
+        "image" => "https://mimgnews.pstatic.net/image/upload/office_logo/001/2017/12/21/logo_001_41_20171221154521.jpg",
+        "db" => $연합뉴스
+    ),
+    array(
+        "name" => "국민일보",
+        "url" => "http://www.kmib.co.kr",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/5rG0000005/logo/2020/12/07/A_152125836.png",
+        "db" => $국민일보
+    ),
+    array(
+        "name" => "경향신문",
+        "url" => "http://www.khan.co.kr",
+        "image" => "https://mimgnews.pstatic.net/image/upload/office_logo/032/2017/12/21/logo_032_41_20171221170921.jpg",
+        "db" => $경향신문
+    ),
+    array(
+        "name" => "조선일보",
+        "url" => "http://www.chosun.com",
+        "image" => "https://imgnews.pstatic.net/image/upload/spubs/zbG0000023/logo/2020/12/03/A_172123314.jpg",
+        "db" => $조선일보
+    ),
+    array(
+        "name" => "한겨레",
+        "url" => "http://www.hani.co.kr",
+        "image" => "https://mimgnews.pstatic.net/image/upload/office_logo/028/2017/12/21/logo_028_41_20171221160121.jpg",
+        "db" => $한겨레
+    )
+);
+
+shuffle($NEWS);
+$content = '
+<div class="rankingnews _popularWelBase _persist">
+    <div class="rankingnews_head">
+        <h2 class="rankingnews_tit">실시간 <em>뉴스</em></h2>
+        <ul class="rankingnews_tab">
+            <li class="rankingnews_tab_item nclicks(&#39;RBP.rnk&#39;) is_selected"><a href="./crawling_new.html">최신 뉴스</a></li>
+            <li class="rankingnews_tab_item nclicks(&#39;RBP.cmt&#39;)  "><a href="./crawling_main.html">주요 뉴스</a></li>
+            <li class="rankingnews_tab_item nclicks(&#39;RBP.cmt&#39;)"><a href="./crawling_keywords.html">실시간 검색어</a></li>
+        </ul>
+    </div>
+    ';
+?>
+
+<body>
+    <hr>
+    <!-- ================   KBS   ================ -->
+    <?php 
+        echo $content;
+        for($i=0; $i<12; $i=$i+1) {
+
+            echo "
+            <div class=\"rankingnews_box_wrap _popularRanking\">
+                <div class=\"rankingnews_box\">
+                    <a href=\"{$NEWS[$i]['url']}\" class=\"rankingnews_box_head nclicks(&#39;RBP.rnkpname&#39;)\">
+                        <span class=\"rankingnews_thumb\"><img src= \"{$NEWS[$i]['image']}\" width=\"26\" height=\"26\" alt=\"KBS\"></span>
+                        <strong class=\"rankingnews_name\">{$NEWS[$i]['name']}</strong>
+                    </a>
+                    <ul class=\"rankingnews_list\">
+            ";
+
+            for($j=0; $j<5; $j=$j+1) {
+                $a = $j+1;
+
+                echo "
+                <li>
+                    <em class=\"list_ranking_num\">$a</em>
+                    <div class=\"list_content\">
+                        <a href=\"{$NEWS[$i]['db'][$j]['url']}\" class=\"list_title nclicks(&#39;RBP.rnknws&#39;)\">{$NEWS[$i]['db'][$j]['title']}</a>
+                        <span class=\"list_time\">{$NEWS[$i]['db'][$j]['time']}</span>
+                    </div>
+                    
+                    <a href=\"{$NEWS[$i]['db'][$j]['url']}\" class=\"list_img nclicks(&#39;RBP.rnknws&#39;)\">
+                        <img src=\"{$NEWS[$i]['db'][$j]['image']}\" width=\"70\" height=\"70\" alt=\"\" onerror=\"this.src=&#39;https://ssl.pstatic.net/static.news/image/news/errorimage/noimage_70x70_1.png&#39;;\">
+                        
+                    </a>
+                    
+                </li>
+                ";
+
+            }
+            echo "
+                    </ul>
+                </div>
+            </div>
+            ";
+        }
+    ?>
+        
+</div>
+</body></html>
