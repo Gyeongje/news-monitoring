@@ -48,6 +48,15 @@ if __name__ == '__main__':
     crawl_main_ip = extract_ip(4)
     crawl_new_ip = extract_ip(3)
     crawl_keyword_ip = extract_ip(2)
+
+    conn, cursor = Connect_DB(crawl_keyword_ip, '')
+    cursor.execute('CREATE DATABASE IF NOT EXISTS crawl_keyword DEFAULT CHARACTER SET utf8')
+    conn.close()
+
+    conn, cursor = Connect_DB(crawl_keyword_ip,'crawl_keyword')
+    cursor.execute("CREATE TABLE IF NOT EXISTS KEYWORDS (id int(2), keyword text, persent text)")
+    cursor.execute("ALTER TABLE KEYWORDS ADD UNIQUE (id)")
+    
     while 1:
         start = time.perf_counter()
         conn, cursor = Connect_DB(crawl_main_ip,'crawl_main')
@@ -88,14 +97,8 @@ if __name__ == '__main__':
                     break
                 count += 1
         #print(rank)
-        conn, cursor = Connect_DB(crawl_keyword_ip, '')
-        cursor.execute('CREATE DATABASE IF NOT EXISTS crawl_keyword DEFAULT CHARACTER SET utf8')
-        conn.close()
 
         conn, cursor = Connect_DB(crawl_keyword_ip,'crawl_keyword')
-
-        cursor.execute("CREATE TABLE IF NOT EXISTS KEYWORDS (id int(2), keyword text, persent text)")
-        cursor.execute("ALTER TABLE KEYWORDS ADD UNIQUE (id)")
 
         i=0
         for r in rank:
