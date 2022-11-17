@@ -87,7 +87,8 @@ if __name__ == '__main__':
     for A in AGENCY:
         cursor.execute("CREATE TABLE IF NOT EXISTS {} (id int(1), title text, url text, image text, time text)".format(A))
         cursor.execute("ALTER TABLE {} ADD UNIQUE (id)".format(A))
-
+    conn.close()
+    
     threads = []
     while 1:
         start = time.perf_counter()    
