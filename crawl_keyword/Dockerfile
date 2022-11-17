@@ -20,11 +20,12 @@ RUN python -m pip install --upgrade pip \
 
 RUN mkdir /home/crawl_keyword \ 
     && cd /home/crawl_keyword \
-    && wget https://github.com//Gyeongje/news-monitoring/raw/main/Crawling/textrank.tar \
+    && wget https://github.com/Gyeongje/news-monitoring/raw/main/crawl_keyword/textrank.tar \
     && tar -xvf /home/crawl_keyword/textrank.tar \
     && rm textrank.tar && cd textrank \
     && python3 /home/crawl_keyword/textrank/setup.py build
 
-COPY crawl_keyword.py /home/crawl_keyword/textrank
+WORKDIR /home/crawl_keyword/textrank
+COPY crawl_keyword.py .
 
-CMD ["python", "/home/crawl_keyword/textrank/crawl_keyword.py"]
+CMD ["python", "crawl_keyword.py"]

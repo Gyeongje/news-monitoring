@@ -95,7 +95,7 @@ if __name__ == '__main__':
         conn, cursor = Connect_DB(crawl_keyword_ip,'crawl_keyword')
 
         cursor.execute("CREATE TABLE IF NOT EXISTS KEYWORDS (id int(2), keyword text, persent text)")
-        cursor.execute("ALTER TABLE {} ADD UNIQUE (id)".format(A))
+        cursor.execute("ALTER TABLE KEYWORDS ADD UNIQUE (id)")
 
         i=0
         for r in rank:

@@ -10,7 +10,7 @@ services:
         depends_on:
             - crawl_main
             - crawl_new
-            #- crawl_keyword
+            - crawl_keyword
         restart: always
         networks:
           - gyeongje
@@ -46,6 +46,8 @@ services:
         stdin_open: true
         tty: true
         depends_on:
+            - crawl_main_db
+            - crawl_new_db
             - crawl_keyword_db
         restart: always
         networks:

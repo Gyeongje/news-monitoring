@@ -10,6 +10,7 @@ RUN python3 -m pip install --upgrade pip \
 RUN mkdir /home/crawl_main
 RUN cd /home/crawl_main
 
-COPY crawling_main.py /home/crawl_main
+WORKDIR /home/crawl_main
+COPY crawling_main.py .
 
-CMD ["python", "/home/crawl_main/crawling_main.py"]
+CMD ["python", "crawling_main.py"]
