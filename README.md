@@ -2,7 +2,7 @@
 2022 소프트웨어 페스티벌 데이터 분석 부문 실시간 뉴스 모니터링 서비스입니다.
 
 > 개발 언어: HTML, CSS, JS, PHP, Python <br>
-> 활용 플랫폼: Ubuntu, MYSQL, Naver 뉴스 Template <br>
+> 활용 플랫폼: Docker, Ubuntu, MYSQL, APACHE, Naver NEWs Template <br>
 > 활용 라이브러리: TextRank, requests, beautifulsoup4, MySQLdb, scikit-learn, konlpy
 <br>
 
