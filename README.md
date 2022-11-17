@@ -13,5 +13,8 @@
 + 또한 각 기사 제목을 TextRank Library를 활용하여 키워드 및 언급도를 분석하고 키워드 언급 순위를 추출하여 **실시간 검색어 순위**를 구현하였습니다. <br>
  
 <br><br>
+## Architecture
+![image](https://user-images.githubusercontent.com/31283542/202434848-f463a64d-b2b0-4f67-b66a-1465f2fe1f69.png)
+<br><br>
 ## DEMO 영상
 <img src="https://user-images.githubusercontent.com/31283542/201531091-325cd852-a1ea-4488-ba7e-e1ed36dd6de3.gif" width="1080" height="900"/>
