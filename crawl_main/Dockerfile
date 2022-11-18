@@ -14,3 +14,4 @@ WORKDIR /home/crawl_main
 COPY crawling_main.py .
 
 CMD ["python", "crawling_main.py"]
+#CMD ["/bin/sh"]

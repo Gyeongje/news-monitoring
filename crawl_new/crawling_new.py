@@ -13,13 +13,18 @@ DB = ''
 
 
 def Connect_DB(IP, DB):
-    conn = MySQLdb.connect(
-        user="root",
-        passwd="test1234",
-        host=IP,
-        db=DB,
-        charset="utf8"
-    )
+    while True:
+        try:
+            conn = MySQLdb.connect(
+                user="root",
+                passwd="test1234",
+                host=IP,
+                db=DB,
+                charset="utf8"
+            )
+            break
+        except:
+            time.sleep(5)
     cursor = conn.cursor()
     return conn, cursor
 
@@ -62,7 +67,7 @@ def Crawling(agen, agen_num):
             i+=1
 
         conn.commit()
-        conn.close()
+    conn.close()
 
 
 
@@ -73,7 +78,6 @@ if __name__ == '__main__':
     "YTN":"052", "NEWS1":"421", "NEWSIS":"003", "연합뉴스":"001", 
     "조선일보":"023", "국민일보":"005", "경향신문":"032", "한겨레":"028"
     }
-
     ip = socket.gethostbyname(socket.gethostname()).split('.')
     ip[-1] = str(3)
     ip = '.'.join(ip)
@@ -86,11 +90,11 @@ if __name__ == '__main__':
     conn, cursor = Connect_DB(IP, DB)
     for A in AGENCY:
         cursor.execute("CREATE TABLE IF NOT EXISTS {} (id int(1), title text, url text, image text, time text)".format(A))
-        cursor.execute("ALTER TABLE {} ADD UNIQUE (id)".format(A))
+        #cursor.execute("ALTER TABLE {} ADD UNIQUE (id)".format(A))
     conn.close()
-    
-    threads = []
+
     while 1:
+        threads = []
         start = time.perf_counter()    
         for A in AGENCY:
             t = Thread(target=Crawling, args=(A, AGENCY[A], ))
@@ -99,7 +103,7 @@ if __name__ == '__main__':
             
         for thread in threads:
             thread.join()
-
+ 
         
         finish = time.perf_counter()
         t = round(finish-start, 2)

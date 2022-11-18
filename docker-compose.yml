@@ -11,9 +11,10 @@ services:
             - crawl_main
             - crawl_new
             - crawl_keyword
+            - crawl_main_db
+            - crawl_new_db
+            - crawl_keyword_db
         restart: always
-        networks:
-          - gyeongje
 
     crawl_main:
         build: ./crawl_main/
@@ -23,9 +24,9 @@ services:
         tty: true
         depends_on:
             - crawl_main_db
+            - crawl_new_db
+            - crawl_keyword_db
         restart: always
-        networks:
-          - gyeongje
 
     crawl_new:
         build: ./crawl_new/
@@ -34,10 +35,8 @@ services:
         stdin_open: true
         tty: true
         depends_on:
-            - crawl_new_db
+            - crawl_main
         restart: always
-        networks:
-            - gyeongje
 
     crawl_keyword:
         build: ./crawl_keyword/
@@ -46,12 +45,9 @@ services:
         stdin_open: true
         tty: true
         depends_on:
-            - crawl_main_db
-            - crawl_new_db
-            - crawl_keyword_db
+            - crawl_main
+            - crawl_new
         restart: always
-        networks:
-            - gyeongje
 
     crawl_main_db:
         image: mysql
@@ -63,8 +59,6 @@ services:
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci
             - --skip-character-set-client-handshake
-        networks:
-            - gyeongje
 
     crawl_new_db:
         image: mysql
@@ -76,8 +70,8 @@ services:
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci
             - --skip-character-set-client-handshake
-        networks:
-            - gyeongje
+        depends_on:
+            - crawl_main_db
 
     crawl_keyword_db:
         image: mysql
@@ -89,8 +83,6 @@ services:
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci
             - --skip-character-set-client-handshake
-        networks:
-            - gyeongje
-      
-networks:
-  gyeongje:
+        depends_on:
+            - crawl_main_db
+            - crawl_new_db

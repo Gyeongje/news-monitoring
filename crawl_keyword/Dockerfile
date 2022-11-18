@@ -29,3 +29,4 @@ WORKDIR /home/crawl_keyword/textrank
 COPY crawl_keyword.py .
 
 CMD ["python", "crawl_keyword.py"]
+#CMD ["/bin/sh"]

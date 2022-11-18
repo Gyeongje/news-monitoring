@@ -14,13 +14,18 @@ headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 
 
 def Connect_DB(IP, DB):
-    conn = MySQLdb.connect(
-        user="root",
-        passwd="test1234",
-        host=IP,
-        db=DB,
-        charset="utf8"
-    )
+    while True:
+        try:
+            conn = MySQLdb.connect(
+                user="root",
+                passwd="test1234",
+                host=IP,
+                db=DB,
+                charset="utf8"
+            )
+            break
+        except:
+            time.sleep(5)
     cursor = conn.cursor()
     return conn, cursor
 
@@ -45,9 +50,9 @@ if __name__ == '__main__':
     "조선일보":"023", "국민일보":"005", "경향신문":"032", "한겨레":"028"
     }
 
-    crawl_main_ip = extract_ip(4)
+    crawl_main_ip = extract_ip(2)
     crawl_new_ip = extract_ip(3)
-    crawl_keyword_ip = extract_ip(2)
+    crawl_keyword_ip = extract_ip(4)
 
     conn, cursor = Connect_DB(crawl_keyword_ip, '')
     cursor.execute('CREATE DATABASE IF NOT EXISTS crawl_keyword DEFAULT CHARACTER SET utf8')
