@@ -14,7 +14,7 @@
  
 <br><br>
 ## Architecture
-![image](https://user-images.githubusercontent.com/31283542/202434848-f463a64d-b2b0-4f67-b66a-1465f2fe1f69.png)
+![image](https://user-images.githubusercontent.com/31283542/202607758-82e9e9cf-88c0-497d-bb0b-bda295d1d3a1.png)
 <br><br>
 ## DEMO 영상
 <img src="https://user-images.githubusercontent.com/31283542/201531091-325cd852-a1ea-4488-ba7e-e1ed36dd6de3.gif" width="1080" height="900"/>
