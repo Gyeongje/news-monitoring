@@ -61,8 +61,6 @@ def Crawling(agen, agen_num):
             except:
                 idx += 1
                 continue
-            #print(f"INSERT INTO {agen} VALUES(\"{news_title}\", \"{news_url}\", \"{news_image}\", \"{news_view}\")")
-            #print(news)
 
         i = 1
         for n in news:
@@ -72,8 +70,6 @@ def Crawling(agen, agen_num):
 
         conn.commit()
     conn.close()
-
-
 
  
 if __name__ == '__main__':
