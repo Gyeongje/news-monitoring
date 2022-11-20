@@ -814,6 +814,5 @@ docker-compose up -d --build
 ## Architecture
 ![image](https://user-images.githubusercontent.com/31283542/202607758-82e9e9cf-88c0-497d-bb0b-bda295d1d3a1.png)
 
-## DEMO 영상
-[Youtube] https://youtu.be/7l4j4UEoYko
+## DEMO 영상 ([link](https://youtu.be/7l4j4UEoYko))
 <img src="https://user-images.githubusercontent.com/31283542/201531091-325cd852-a1ea-4488-ba7e-e1ed36dd6de3.gif" width="1080" height="900"/>
