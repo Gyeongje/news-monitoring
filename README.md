@@ -716,7 +716,101 @@ new Chart(document.getElementById("pie-chart"), {
 
 
 ## 서비스 관리
+> Docker-Compose 를 활용.
+```
+version: '3.8'
 
+services:
+    site:
+        build: ./crawl_site/
+        image: gyeongje/site
+        container_name: site        
+        ports: 
+            - "80:80"
+        depends_on:
+            - crawl_main
+            - crawl_new
+            - crawl_keyword
+            - crawl_main_db
+            - crawl_new_db
+            - crawl_keyword_db
+        restart: always
+
+    crawl_main:
+        build: ./crawl_main/
+        image: gyeongje/crawl_main 
+        container_name: crawl_main
+        stdin_open: true
+        tty: true
+        depends_on:
+            - crawl_main_db
+            - crawl_new_db
+            - crawl_keyword_db
+        restart: always
+
+    crawl_new:
+        build: ./crawl_new/
+        image: gyeongje/crawl_new 
+        container_name: crawl_new
+        stdin_open: true
+        tty: true
+        depends_on:
+            - crawl_main
+        restart: always
+
+    crawl_keyword:
+        build: ./crawl_keyword/
+        image: gyeongje/crawl_keyword 
+        container_name: crawl_keyword
+        stdin_open: true
+        tty: true
+        depends_on:
+            - crawl_main
+            - crawl_new
+        restart: always
+
+    crawl_main_db:
+        image: mysql
+        container_name: crawl_main_db
+        environment:
+            - MYSQL_ROOT_PASSWORD=test1234
+            - TZ=Asia/Seoul
+        command: 
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+
+    crawl_new_db:
+        image: mysql
+        container_name: crawl_new_db
+        environment:
+            - MYSQL_ROOT_PASSWORD=test1234
+            - TZ=Asia/Seoul
+        command: 
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+        depends_on:
+            - crawl_main_db
+
+    crawl_keyword_db:
+        image: mysql
+        container_name: crawl_keyword_db
+        environment:
+            - MYSQL_ROOT_PASSWORD=test1234
+            - TZ=Asia/Seoul
+        command: 
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+        depends_on:
+            - crawl_main_db
+            - crawl_new_db
+```
+```
+docker-compose down
+docker-compose up -d --build
+```
 <br><br>
 ## Architecture
 ![image](https://user-images.githubusercontent.com/31283542/202607758-82e9e9cf-88c0-497d-bb0b-bda295d1d3a1.png)
