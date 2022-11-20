@@ -57,8 +57,6 @@ def Crawling(agen, agen_num):
             except:
                 idx += 1
                 continue
-            #print(f"INSERT INTO {agen} VALUES(\"{news_title}\", \"{news_url}\", \"{news_image}\", \"{news_time}\")")
-            #print(news)
 
         i = 1
         for n in news:
@@ -68,8 +66,6 @@ def Crawling(agen, agen_num):
 
         conn.commit()
     conn.close()
-
-
 
  
 if __name__ == '__main__':
@@ -90,7 +86,7 @@ if __name__ == '__main__':
     conn, cursor = Connect_DB(IP, DB)
     for A in AGENCY:
         cursor.execute("CREATE TABLE IF NOT EXISTS {} (id int(1), title text, url text, image text, time text)".format(A))
-        #cursor.execute("ALTER TABLE {} ADD UNIQUE (id)".format(A))
+        cursor.execute("ALTER TABLE {} ADD UNIQUE (id)".format(A))
     conn.close()
 
     while 1:
