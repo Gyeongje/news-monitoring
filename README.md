@@ -45,7 +45,7 @@ CMD ["python", "crawling_main.py"]
 + Moudle import를 위해 필요 libray를 빌드 (build-base(gcc,g++...), mariadb-dev)
 + HTTP 통신을 위한 requests, 파싱을 위한 beautifulsoup4, MYSQL DB 접속을 위해 mysqlclient를 설치 
 
-### Explain Source ([crawling_main.py](https://github.com/Gyeongje/news-monitoring/blob/main/crawl_main/crawling_main.py))
+### Source ([crawling_main.py](https://github.com/Gyeongje/news-monitoring/blob/main/crawl_main/crawling_main.py))
 ``` python
 def Connect_DB(IP, DB):
     while True:
@@ -576,11 +576,144 @@ summarizer.summarize(sents, topk=20)
  ('이씨/NNP', 1.2869280494707418)]
 ```
 
-
-
-
-
 ## 사이트 구축 (crawl_site)
+> 개발 환경: Ubuntu(Docker), HTML, CSS, PHP, JS <br>
+> 활용 플랫폼: Docker, PHP, Apache <br>
+
+### Dockerfile
+```
+FROM oberd/php-8.0-apache
+
+RUN apt-get update && apt-get install -y vim 
+RUN echo "AddType application/x-httpd-php .html" >> /etc/apache2/mods-enabled/mime.conf
+
+COPY src/ .
+RUN cp crawling_main.html index.html
+```
++ 웹 구축을 위해 Apache를 사용.
++ HTML에서 PHP 문법을 사용하기 때문에 PHP + HTML+PHP 호환 Apache 설정 추가.
+
+### Source ([주요 뉴스](https://github.com/Gyeongje/news-monitoring/blob/main/crawl_site/src/crawling_main.html), [최신 뉴스](https://github.com/Gyeongje/news-monitoring/blob/main/crawl_site/src/crawling_new.html), [검색어 순위](https://github.com/Gyeongje/news-monitoring/blob/main/crawl_site/src/crawling_keywords.html))
+``` php
+function db_get_pdo()
+{
+    $host = $_SERVER['REMOTE_ADDR'];
+    $host[-1] = '3';
+    $port = '3306';
+    $dbname = 'crawl_new';
+    $charset = 'utf8';
+    $username = 'root';
+    $db_pw = "test1234";
+    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=$charset";
+    $pdo = new PDO($dsn, $username, $db_pw);
+    return $pdo;
+}
+
+function db_select($query, $param=array()){
+    $pdo = db_get_pdo();
+    try {
+        $st = $pdo->prepare($query);
+        $st->execute($param);
+        $result =$st->fetchAll(PDO::FETCH_ASSOC);
+        $pdo = null;
+        return $result;
+    } catch (PDOException $ex) {
+        return false;
+    } finally {
+        $pdo = null;
+    }
+}
+```
+```
+$JTBC = db_select("select * from JTBC");
+$KBS = db_select("select * from KBS");
+$MBC = db_select("select * from MBC");
+$NEWS1 = db_select("select * from NEWS1");
+$NEWSIS = db_select("select * from NEWSIS");
+$SBS = db_select("select * from SBS");
+$YTN = db_select("select * from YTN");
+$연합뉴스 = db_select("select * from 연합뉴스");
+$경향신문 = db_select("select * from 경향신문");
+$국민일보 = db_select("select * from 국민일보");
+$조선일보 = db_select("select * from 조선일보");
+$한겨레 = db_select("select * from 한겨레");
+```
++ php PDO를 통해 MySQL DB와 Connection. <br>
+
+``` html
+<div class="rankingnews _popularWelBase _persist">
+
+    <div class="rankingnews_head">
+        <h2 class="rankingnews_tit">실시간 <em>뉴스</em></h2>
+        <ul class="rankingnews_tab">
+            <li class="rankingnews_tab_item nclicks(&#39;RBP.rnk&#39;) is_selected"><a href="./crawling_new.html">최신 뉴스</a></li>
+            <li class="rankingnews_tab_item nclicks(&#39;RBP.cmt&#39;)  "><a href="./crawling_main.html">주요 뉴스</a></li>
+            <li class="rankingnews_tab_item nclicks(&#39;RBP.cmt&#39;)"><a href="./crawling_keywords.html">실시간 검색어</a></li>
+        </ul>
+    </div>
+    
+    <div class=\"rankingnews_box_wrap _popularRanking\">
+        <div class=\"rankingnews_box\">
+            <a href=\"{$NEWS[$i]['url']}\" class=\"rankingnews_box_head nclicks(&#39;RBP.rnkpname&#39;)\">
+                <span class=\"rankingnews_thumb\"><img src= \"{$NEWS[$i]['image']}\" width=\"26\" height=\"26\" alt=\"KBS\"></span>
+                <strong class=\"rankingnews_name\">{$NEWS[$i]['name']}</strong>
+            </a>
+            <ul class=\"rankingnews_list\">
+                <li>
+                    <em class=\"list_ranking_num\">$a</em>
+                    <div class=\"list_content\">
+                        <a href=\"{$NEWS[$i]['db'][$j]['url']}\" class=\"list_title nclicks(&#39;RBP.rnknws&#39;)\">{$NEWS[$i]['db'][$j]['title']}</a>
+                        <span class=\"list_time\">{$NEWS[$i]['db'][$j]['time']}</span>
+                    </div>
+
+                    <a href=\"{$NEWS[$i]['db'][$j]['url']}\" class=\"list_img nclicks(&#39;RBP.rnknws&#39;)\">
+                        <img src=\"{$NEWS[$i]['db'][$j]['image']}\" width=\"70\" height=\"70\" alt=\"\" onerror=\"this.src=&#39;https://ssl.pstatic.net/static.news/image/news/errorimage/noimage_70x70_1.png&#39;;\">
+
+                    </a>
+               </li>            
+            </ul>
+        </div>
+    </div>
+    
+</div>
+```
++ NAVER 뉴스 TEMPLATE HTML, CSS를 PHP로 커스텀마이징하여 활용. (DB와 연계)
+
+``` JS
+<script language="JavaScript">
+new Chart(document.getElementById("pie-chart"), {
+    type: 'pie',
+    data: {
+        labels: [
+            "<?= $KEYWORDS[0]['keyword'] ?>", "<?= $KEYWORDS[1]['keyword'] ?>", "<?= $KEYWORDS[2]['keyword'] ?>", "<?= $KEYWORDS[3]['keyword'] ?>",
+            "<?= $KEYWORDS[4]['keyword'] ?>", "<?= $KEYWORDS[5]['keyword'] ?>", "<?= $KEYWORDS[6]['keyword'] ?>", "<?= $KEYWORDS[7]['keyword'] ?>",
+            "<?= $KEYWORDS[8]['keyword'] ?>", "<?= $KEYWORDS[9]['keyword'] ?>", "<?= $KEYWORDS[10]['keyword'] ?>", "<?= $KEYWORDS[11]['keyword'] ?>",
+            "<?= $KEYWORDS[12]['keyword'] ?>", "<?= $KEYWORDS[13]['keyword'] ?>", "<?= $KEYWORDS[14]['keyword'] ?>", "<?= $KEYWORDS[15]['keyword'] ?>",
+            "<?= $KEYWORDS[16]['keyword'] ?>", "<?= $KEYWORDS[17]['keyword'] ?>", "<?= $KEYWORDS[18]['keyword'] ?>", "<?= $KEYWORDS[19]['keyword'] ?>"
+        ],
+        datasets: [{
+            label: "Population (millions)",
+            backgroundColor: ['#202020', '#242424', '#282828', '#2c2c2c', '#303030', '#343434', '#383838', '#3c3c3c', '#404040', '#444444', '#484848', '#4c4c4c', '#505050', '#545454', '#585858', '#5c5c5c', '#606060', '#646464', '#686868', '#6c6c6c'],
+            data: [
+            "<?= $KEYWORDS[0]['persent'] ?>", "<?= $KEYWORDS[1]['persent'] ?>", "<?= $KEYWORDS[2]['persent'] ?>", "<?= $KEYWORDS[3]['persent'] ?>",
+            "<?= $KEYWORDS[4]['persent'] ?>", "<?= $KEYWORDS[5]['persent'] ?>", "<?= $KEYWORDS[6]['persent'] ?>", "<?= $KEYWORDS[7]['persent'] ?>",
+            "<?= $KEYWORDS[8]['persent'] ?>", "<?= $KEYWORDS[9]['persent'] ?>", "<?= $KEYWORDS[10]['persent'] ?>", "<?= $KEYWORDS[11]['persent'] ?>",
+            "<?= $KEYWORDS[12]['persent'] ?>", "<?= $KEYWORDS[13]['persent'] ?>", "<?= $KEYWORDS[14]['persent'] ?>", "<?= $KEYWORDS[15]['persent'] ?>",
+            "<?= $KEYWORDS[16]['persent'] ?>", "<?= $KEYWORDS[17]['persent'] ?>", "<?= $KEYWORDS[18]['persent'] ?>", "<?= $KEYWORDS[19]['persent'] ?>"
+            ]
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: '실시간 검색어 순위'
+        }
+    }
+});
+</script>
+```
++ 실시간 검색어 순위를 표현하는 부분은 Chart.js를 활용.
+
 
 ## 서비스 관리
 
