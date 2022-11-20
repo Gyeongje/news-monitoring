@@ -439,9 +439,9 @@ def textrank_keyword(sents, tokenize, min_count, window, min_cooccurrence, df=0.
     return keywords
 ```
 
-TextRank 를 이용하여 핵심 문장을 추출하기 위해서는 문장 그래프를 만들어야 합니다. 각 문장이 마디가 되며, edge weight 는 문장 간 유사도 입니다. 일반적으로 문서 간 혹은 문장 간 유사도를 측정하기 위하여 Cosine similarity 가 이용되는데, TextRank 는 아래와 같은 문장 간 유사도 척도를 제안했습니다. 두 문장에 공통으로 등장한 단어의 개수를 각 문장의 단어 개수의 log 값의 합으로 나눈 것 입니다.
+TextRank 를 이용하여 핵심 문장을 추출하기 위해서는 문장 그래프를 만들어야 합니다. 각 문장이 마디가 되며, edge weight 는 문장 간 유사도 입니다. 일반적으로 문서 간 혹은 문장 간 유사도를 측정하기 위하여 Cosine similarity 가 이용되는데, TextRank 는 아래와 같은 문장 간 유사도 척도를 제안했습니다. 두 문장에 공통으로 등장한 단어의 개수를 각 문장의 단어 개수의 log 값의 합으로 나눈 것 입니다. <br>
 ![image](https://user-images.githubusercontent.com/31283542/202895302-f2b5cb5f-95f6-46cd-8da5-f037e3287457.png)
-
+<br>
 위의 이야기를 아래의 함수로 구현합니다. 실험을 위하여 문장 간 유사도를 Cosine similarity 와 TextRank 의 유사도 모두 구현합니다.
 또한 min_sim 이라는 argument 를 추가하였습니다. 문장 간 그래프의 sparsity 가 클수록 PageRank 의 계산이 빠릅니다. 이를 위하여 문장 간 유사도가 0.3 보다 작은 경우에는 edge 를 연결하지 않습니다.
 
