@@ -38,9 +38,9 @@ def extract_ip(n):
 
 komoran = Komoran()
 def komoran_tokenizer(sent):
-        words = komoran.pos(sent, join=True)
-        words = [w for w in words if ('/NN' in w or '/XR' in w or '/VA' in w or '/VV' in w)]
-        return words
+    words = komoran.pos(sent, join=True)
+    words = [w for w in words if ('/NN' in w or '/XR' in w or '/VA' in w or '/VV' in w)]
+    return words
 
 
 if __name__ == '__main__':
