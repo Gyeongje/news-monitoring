@@ -1,0 +1,3 @@
+[submodule "news-monitoring"]
+	path = news-monitoring
+	url = https://github.com/Gyeongje/KHU.git
